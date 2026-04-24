@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -28,12 +28,13 @@ const StarRating = ({ rating, onRate, interactive = false }) => {
     );
 };
 
-const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
+const ProductsPage = ({ onBack, onBuyNow, onNavigate, initialSearch = '' }) => {
     const containerRef = useRef(null);
     const { addToCart } = useContext(CartContext);
     const { isLoggedIn, setIsAuthModalOpen } = useContext(AuthContext);
     const { getReviews, getAverageRating } = useContext(ReviewContext);
     
+    const [searchText, setSearchText] = useState(initialSearch);
     const [filterGender, setFilterGender] = useState('All');
     const [filterColor, setFilterColor] = useState('All');
     const [filterFabric, setFilterFabric] = useState('All');
@@ -44,11 +45,14 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
     const [showCartAlert, setShowCartAlert] = useState(false);
     const [cartAlertProduct, setCartAlertProduct] = useState(null);
 
+    useEffect(() => {
+        setSearchText(initialSearch);
+    }, [initialSearch]);
+
     const getPriceValue = (priceStr) => parseInt(priceStr.replace(/[^0-9]/g, ''), 10);
 
     const handleAddToCart = (product) => {
         addToCart({ ...product, size: selectedSize });
-        // Show custom animated alert
         setCartAlertProduct(product);
         setShowCartAlert(true);
         setTimeout(() => setShowCartAlert(false), 3000);
@@ -65,12 +69,24 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
         onBuyNow();
     };
 
-    // Dynamic Filter Options based on data
     const colors = ['All', ...new Set(products.map(p => p.color))];
     const fabrics = ['All', ...new Set(products.map(p => p.fabric))];
     const occasions = ['All', ...new Set(products.map(p => p.occasion))];
 
+    const searchLower = searchText.toLowerCase();
+
     let filteredProducts = products.filter(p => {
+        // Search filter
+        if (searchText) {
+            const match = p.name.toLowerCase().includes(searchLower) ||
+                p.category.toLowerCase().includes(searchLower) ||
+                p.color.toLowerCase().includes(searchLower) ||
+                p.fabric.toLowerCase().includes(searchLower) ||
+                p.occasion.toLowerCase().includes(searchLower) ||
+                p.gender.toLowerCase().includes(searchLower) ||
+                p.desc.toLowerCase().includes(searchLower);
+            if (!match) return false;
+        }
         if (filterGender !== 'All' && p.gender !== filterGender) return false;
         if (filterColor !== 'All' && p.color !== filterColor) return false;
         if (filterFabric !== 'All' && p.fabric !== filterFabric) return false;
@@ -84,18 +100,24 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
         filteredProducts.sort((a, b) => getPriceValue(b.price) - getPriceValue(a.price));
     }
 
+    const hasActiveFilters = filterGender !== 'All' || filterColor !== 'All' || filterFabric !== 'All' || filterOccasion !== 'All' || searchText;
+
+    const clearAll = () => {
+        setFilterGender('All'); setFilterColor('All'); setFilterFabric('All'); setFilterOccasion('All'); setSearchText('');
+    };
+
     useGSAP(() => {
         gsap.from(".products-header h1, .products-header p", {
             y: 30, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out"
         });
-        gsap.from(".products-sidebar", {
-            x: -50, opacity: 0, duration: 1, delay: 0.3, ease: "power3.out"
+        gsap.from(".filter-bar", {
+            y: -30, opacity: 0, duration: 0.8, delay: 0.3, ease: "power3.out"
         });
         gsap.fromTo(".product-card", 
             { y: 50, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out", delay: 0.5 }
         );
-    }, { scope: containerRef, dependencies: [filteredProducts] });
+    }, { scope: containerRef });
 
     const productReviews = quickViewProduct ? getReviews(quickViewProduct.id) : [];
     const avgRating = quickViewProduct ? getAverageRating(quickViewProduct.id) : 0;
@@ -116,53 +138,57 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
             </div>
 
             <header className="products-header">
-                <button className="back-btn" onClick={onBack}>&larr; Back to Home</button>
+                <button className="products-back-btn" onClick={onBack}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    Back to Home
+                </button>
                 <h1>Daenerys Boutique</h1>
                 <p>Curated luxury. Filter your desires.</p>
             </header>
 
-            <div className="products-container">
-                <aside className="products-sidebar">
-                    <div className="sidebar-sticky">
-                        <h2>Refine Search</h2>
-                        <div className="filter-group">
-                            <h3>Collection</h3>
-                            <select value={filterGender} onChange={(e) => setFilterGender(e.target.value)}>
-                                <option value="All">All Collections</option>
-                                <option value="Bride">Bridal Wear</option>
-                                <option value="Groom">Groom Attire</option>
-                            </select>
-                        </div>
-                        <div className="filter-group">
-                            <h3>Color Palette</h3>
-                            <select value={filterColor} onChange={(e) => setFilterColor(e.target.value)}>
-                                {colors.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                        </div>
-                        <div className="filter-group">
-                            <h3>Fabric</h3>
-                            <select value={filterFabric} onChange={(e) => setFilterFabric(e.target.value)}>
-                                {fabrics.map(f => <option key={f} value={f}>{f}</option>)}
-                            </select>
-                        </div>
-                        <div className="filter-group">
-                            <h3>Occasion</h3>
-                            <select value={filterOccasion} onChange={(e) => setFilterOccasion(e.target.value)}>
-                                {occasions.map(o => <option key={o} value={o}>{o}</option>)}
-                            </select>
-                        </div>
-                        <div className="filter-group">
-                            <h3>Sort By Price</h3>
-                            <select value={sortPrice} onChange={(e) => setSortPrice(e.target.value)}>
-                                <option value="default">Featured</option>
-                                <option value="lowToHigh">Low to High</option>
-                                <option value="highToLow">High to Low</option>
-                            </select>
-                        </div>
+            {/* Horizontal Filter Bar */}
+            <div className="filter-bar">
+                <div className="filter-bar-inner">
+                    <div className="filter-search-inline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input 
+                            type="text" 
+                            placeholder="Search in products..." 
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
+                        />
                     </div>
-                </aside>
+                    <select value={filterGender} onChange={(e) => setFilterGender(e.target.value)}>
+                        <option value="All">All Collections</option>
+                        <option value="Bride">Bridal Wear</option>
+                        <option value="Groom">Groom Attire</option>
+                    </select>
+                    <select value={filterColor} onChange={(e) => setFilterColor(e.target.value)}>
+                        {colors.map(c => <option key={c} value={c}>{c === 'All' ? 'All Colors' : c}</option>)}
+                    </select>
+                    <select value={filterFabric} onChange={(e) => setFilterFabric(e.target.value)}>
+                        {fabrics.map(f => <option key={f} value={f}>{f === 'All' ? 'All Fabrics' : f}</option>)}
+                    </select>
+                    <select value={filterOccasion} onChange={(e) => setFilterOccasion(e.target.value)}>
+                        {occasions.map(o => <option key={o} value={o}>{o === 'All' ? 'All Occasions' : o}</option>)}
+                    </select>
+                    <select value={sortPrice} onChange={(e) => setSortPrice(e.target.value)}>
+                        <option value="default">Featured</option>
+                        <option value="lowToHigh">Price: Low → High</option>
+                        <option value="highToLow">Price: High → Low</option>
+                    </select>
+                    {hasActiveFilters && (
+                        <button className="clear-filters-btn" onClick={clearAll}>Clear All</button>
+                    )}
+                </div>
+                <div className="filter-results-count">
+                    {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+                    {searchText && <span> for "<strong>{searchText}</strong>"</span>}
+                </div>
+            </div>
 
-                <main className="products-grid">
+            <div className="products-main-area">
+                <div className="products-grid">
                     {filteredProducts.map(p => {
                         const pAvg = getAverageRating(p.id);
                         const pCount = getReviews(p.id).length;
@@ -191,12 +217,10 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
                     {filteredProducts.length === 0 && (
                         <div className="no-products">
                             <h3>No pieces found matching your criteria.</h3>
-                            <button onClick={() => {
-                                setFilterGender('All'); setFilterColor('All'); setFilterFabric('All'); setFilterOccasion('All');
-                            }}>Clear Filters</button>
+                            <button onClick={clearAll}>Clear All Filters</button>
                         </div>
                     )}
-                </main>
+                </div>
             </div>
 
             {/* Quick View Modal */}
@@ -227,7 +251,6 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
 
                             <p className="qv-desc">{quickViewProduct.desc}</p>
 
-                            {/* Reviews in description area */}
                             {productReviews.length > 0 && (
                                 <div className="qv-reviews-inline">
                                     <h4>Customer Reviews</h4>
@@ -244,7 +267,6 @@ const ProductsPage = ({ onBack, onBuyNow, onNavigate }) => {
                                 </div>
                             )}
 
-                            {/* Size Selector */}
                             <div className="qv-size-section">
                                 <h4>Select Size</h4>
                                 <div className="qv-sizes">

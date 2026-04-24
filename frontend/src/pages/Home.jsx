@@ -16,13 +16,19 @@ const Home = () => {
     // view: 'home' | 'shop' | 'checkout' | 'profile' | 'orders' | 'track'
     const [currentView, setCurrentView] = useState('home');
     const [trackOrderId, setTrackOrderId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const transitionRef = useRef(null);
 
     const navigateTo = (viewName, data) => {
         window.scrollTo(0, 0);
         transitionRef.current.playTransition(() => {
             setCurrentView(viewName);
-            if (data) setTrackOrderId(data);
+            if (viewName === 'shop' && typeof data === 'string') {
+                setSearchQuery(data);
+            } else if (viewName === 'shop') {
+                setSearchQuery('');
+            }
+            if (viewName === 'track' && data) setTrackOrderId(data);
             window.scrollTo(0, 0);
         });
     };
@@ -46,6 +52,7 @@ const Home = () => {
                     onBack={() => navigateTo('home')} 
                     onBuyNow={() => navigateTo('checkout')}
                     onNavigate={navigateTo}
+                    initialSearch={searchQuery}
                 />
             )}
 

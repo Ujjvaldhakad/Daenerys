@@ -10,6 +10,7 @@ const Navbar = ({ onNavigate }) => {
     const { cartCount, toggleCart } = useContext(CartContext);
     const { isLoggedIn, toggleAuthModal, user } = useContext(AuthContext);
 
+
     useGSAP(() => {
         const tl = gsap.timeline();
 
@@ -27,11 +28,7 @@ const Navbar = ({ onNavigate }) => {
                 { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' },
                 '-=0.4'
             )
-            .fromTo('.navbar-search',
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-                '-=0.2'
-            );
+            ;
 
     }, { scope: container });
 
@@ -43,6 +40,8 @@ const Navbar = ({ onNavigate }) => {
         }
     };
 
+
+
     return (
         <div ref={container} className="navbar-container">
             <nav className="navbar">
@@ -51,12 +50,7 @@ const Navbar = ({ onNavigate }) => {
                     <span className="logo-text">Daenerys</span>
                 </div>
 
-                <div className="navbar-search">
-                    <input type="text" placeholder="Search products, brands and more..." />
-                    <button className="search-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </button>
-                </div>
+
 
                 <div className="navbar-links">
                     <div className="nav-item nav-orders" onClick={() => {

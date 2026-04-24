@@ -89,25 +89,45 @@ const Card_gallery = () => {
 
         seamlessLoop.time(wrapTime(0));
 
-        let autoplayTimer;
+        let autoplayCall = null;
+        let isPaused = false;
         
         function scrollToOffset(offset) { 
             scrub.vars.offset = offset;
             scrub.invalidate().restart();
-            resetAutoplay();
         }
 
-        function resetAutoplay() {
-            clearInterval(autoplayTimer);
-            autoplayTimer = setInterval(() => {
+        function autoStep() {
+            if (!isPaused) {
                 scrollToOffset(scrub.vars.offset + spacing);
-            }, 1500);
+            }
+            // Schedule next step using GSAP's delayedCall (much more reliable than setInterval)
+            autoplayCall = gsap.delayedCall(1.5, autoStep);
         }
 
-        resetAutoplay();
+        function pauseAutoplay() {
+            isPaused = true;
+            if (autoplayCall) autoplayCall.kill();
+        }
 
-        const handleNextClick = () => scrollToOffset(scrub.vars.offset + spacing);
-        const handlePrevClick = () => scrollToOffset(scrub.vars.offset - spacing);
+        function resumeAutoplay() {
+            isPaused = false;
+            if (autoplayCall) autoplayCall.kill();
+            autoplayCall = gsap.delayedCall(1.5, autoStep);
+        }
+
+        // Start autoplay
+        autoplayCall = gsap.delayedCall(1.5, autoStep);
+
+        const handleNextClick = () => {
+            scrollToOffset(scrub.vars.offset + spacing);
+            // Reset autoplay timer on manual interaction
+            resumeAutoplay();
+        };
+        const handlePrevClick = () => {
+            scrollToOffset(scrub.vars.offset - spacing);
+            resumeAutoplay();
+        };
 
         const nextBtn = document.querySelector(".next");
         const prevBtn = document.querySelector(".prev");
@@ -121,7 +141,7 @@ const Card_gallery = () => {
             type: "x",
             trigger: cardsRef.current,
             onPress() {
-                clearInterval(autoplayTimer);
+                pauseAutoplay();
                 this.startOffset = scrub.vars.offset;
             },
             onDrag() {
@@ -132,17 +152,28 @@ const Card_gallery = () => {
             onDragEnd() {
                 const snapTime = gsap.utils.snap(spacing);
                 scrollToOffset(snapTime(scrub.vars.offset));
+                resumeAutoplay();
             }
         });
 
-        const handleMouseEnter = () => clearInterval(autoplayTimer);
-        const handleMouseLeave = () => resetAutoplay();
+        const handleMouseEnter = () => pauseAutoplay();
+        const handleMouseLeave = () => resumeAutoplay();
 
         galleryRef.current.addEventListener('mouseenter', handleMouseEnter);
         galleryRef.current.addEventListener('mouseleave', handleMouseLeave);
 
+        // Handle tab visibility — restart autoplay when user comes back
+        const handleVisibility = () => {
+            if (document.hidden) {
+                pauseAutoplay();
+            } else {
+                resumeAutoplay();
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+
         return () => {
-            clearInterval(autoplayTimer);
+            if (autoplayCall) autoplayCall.kill();
             if (nextBtn && prevBtn) {
                 nextBtn.removeEventListener("click", handleNextClick);
                 prevBtn.removeEventListener("click", handlePrevClick);
@@ -154,6 +185,7 @@ const Card_gallery = () => {
                 galleryRef.current.removeEventListener('mouseenter', handleMouseEnter);
                 galleryRef.current.removeEventListener('mouseleave', handleMouseLeave);
             }
+            document.removeEventListener('visibilitychange', handleVisibility);
         };
 
     }, { scope: galleryRef });
