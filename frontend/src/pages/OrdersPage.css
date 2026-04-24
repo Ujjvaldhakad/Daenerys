@@ -1,0 +1,37 @@
+.orders-page { background: #080808; min-height: 100vh; font-family: 'Inter', sans-serif; color: #fff; }
+.orders-container { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 5rem; }
+.orders-container .back-btn { background: transparent; border: 1px solid #333; color: #ccc; padding: 0.8rem 1.5rem; border-radius: 30px; cursor: pointer; margin-bottom: 2rem; margin-top: 7rem; transition: 0.3s; }
+.orders-container .back-btn:hover { border-color: #d4af37; color: #d4af37; }
+.orders-container h1 { font-size: 3rem; font-weight: 300; color: #d4af37; margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 2px; }
+
+.no-orders { text-align: center; padding: 5rem 0; }
+.no-orders-icon { font-size: 5rem; margin-bottom: 1.5rem; }
+.no-orders h2 { font-size: 1.8rem; font-weight: 300; margin-bottom: 0.5rem; }
+.no-orders p { color: #888; }
+
+.orders-list { display: flex; flex-direction: column; gap: 2rem; }
+.order-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 2rem; transition: 0.3s; }
+.order-card:hover { border-color: #333; }
+
+.order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+.order-id { font-weight: 600; color: #d4af37; margin-right: 1rem; font-size: 1.1rem; }
+.order-date { color: #888; font-size: 0.9rem; }
+.order-status { padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+.status-0 { background: rgba(212,175,55,0.15); color: #d4af37; }
+.status-1 { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.status-2 { background: rgba(168,85,247,0.15); color: #a855f7; }
+.status-3 { background: rgba(249,115,22,0.15); color: #f97316; }
+.status-4 { background: rgba(34,197,94,0.15); color: #22c55e; }
+
+.order-items-preview { display: flex; gap: 0.8rem; margin-bottom: 1.5rem; align-items: center; }
+.order-items-preview img { width: 60px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #333; }
+.more-items { color: #888; font-size: 0.9rem; padding-left: 0.5rem; }
+
+.order-card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #222; padding-top: 1.5rem; }
+.order-total { font-size: 1.5rem; font-weight: 600; color: #fff; }
+.track-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 0.7rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+.track-btn:hover { background: #d4af37; color: #000; }
+
+@media (max-width: 600px) {
+    .order-card-header { flex-direction: column; align-items: flex-start; }
+}

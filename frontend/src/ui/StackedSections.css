@@ -1,0 +1,262 @@
+:root {
+  --color-grey: #e9ecef;
+  --color-scroll-pink-lt: #ffc2d1;
+  --light: #f8f9fa;
+  --dark: #212529;
+  --color-text-purple: #e2eafc;
+  --color-surface50: #444;
+  --color-blue: #007bff;
+}
+
+.slides-wrapper {
+  margin-top: 0;
+  background: #111;
+  padding: 20px 0;
+}
+
+.image {
+  width: 50%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  margin-top: 2.5rem;
+  border-radius: 8px;
+}
+
+.section {
+  width: 100%;
+  height: calc(100vh - 64px);
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.5em;
+  text-align: center;
+  position: relative;
+  box-sizing: border-box;
+  background: var(--color-grey);
+  overflow: hidden;
+  border-radius: 10px;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.section-content {
+  width: 100%;
+  height: 100%;
+}
+
+.section p {
+  max-width: 40ch;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.section-inner {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+/* Premium Dark Theme Styles */
+.section-1 { background: #111; color: #fff; }
+.section-2 { background: #1a1a1a; color: #fff; border-top: 1px solid #222; }
+.section-3 { background: #151515; color: #fff; }
+
+.section h1 {
+  font-size: max(4rem, min(8vw + 1rem, 10rem));
+  font-weight: 600;
+  margin: 0 auto;
+}
+
+.shop-now-btn {
+  margin-top: 2.5rem;
+  padding: 1rem 3rem;
+  background-color: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.shop-now-btn:hover {
+  background-color: #d4af37;
+  color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+}
+
+/* Custom layout for Section 2 text */
+.section-2 .section-inner {
+  height: auto;
+  padding: 15vh 5vw 20vh 5vw;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.section-2 h1 {
+  font-size: clamp(3rem, 6vw, 6rem);
+  margin-bottom: 2rem;
+  color: #d4af37; /* Gold accent */
+}
+
+.section-2 p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  max-width: 800px;
+  padding: 0;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  color: #ccc;
+}
+
+/* Custom layout for Section 3 */
+.section-3 .section-inner {
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 5vh 5vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section-3 .text-content {
+  max-width: 500px;
+  text-align: left;
+}
+
+.section-3 h1 {
+  font-size: clamp(3rem, 5vw, 5rem);
+  color: #d4af37;
+  margin-bottom: 1.5rem;
+}
+
+.section-3 p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ccc;
+  padding: 0;
+  font-weight: 400;
+}
+
+.section-3 .image {
+  width: 35%;
+  min-width: 300px;
+  aspect-ratio: 3/4;
+  margin-top: 0;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* --- FLIP GALLERY CSS FOR SECTION 1 --- */
+.boxes-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.box {
+  width: 15vw;
+  aspect-ratio: 3/4;
+  min-width: 120px;
+  max-width: 250px;
+  padding: 8px;
+  border: 1px dashed var(--color-surface50);
+  margin: 0.5rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.box-content {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.box-content:hover {
+  transform: scale(1.05);
+}
+
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.modal .content {
+  height: 85vh;
+  aspect-ratio: 3/4;
+  position: relative;
+  z-index: 1001;
+}
+
+.modal .content .box-content {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+}
+
+.modal .content .box-content:hover {
+  transform: none;
+  cursor: default;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.85);
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .section-3 .section-inner {
+    flex-direction: column-reverse;
+  }
+  .section-3 .image {
+    width: 60%;
+    margin-bottom: 2rem;
+  }
+}
+
+.box-content.one { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953769/Bride1_hsnhyx.jpg"); }
+.box-content.two { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953772/Groom1_rnrglp.jpg"); }
+.box-content.three { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953769/Bride2_jer20c.jpg"); }
+.box-content.four { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953777/Groom2_lbeoap.jpg"); }
+.box-content.five { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953775/Bride3_qwc3a9.jpg"); }
+.box-content.six { background-image: url("https://res.cloudinary.com/dl3ijmjrb/image/upload/w_500,q_auto,f_auto/v1776953772/Groom3_ruzuxw.jpg"); }

@@ -1,0 +1,26 @@
+.profile-page { background: #080808; min-height: 100vh; font-family: 'Inter', sans-serif; color: #fff; }
+.profile-container { max-width: 700px; margin: 0 auto; padding: 2rem 2rem 5rem; }
+.profile-container .back-btn { background: transparent; border: 1px solid #333; color: #ccc; padding: 0.8rem 1.5rem; border-radius: 30px; cursor: pointer; margin-bottom: 3rem; margin-top: 7rem; transition: 0.3s; }
+.profile-container .back-btn:hover { border-color: #d4af37; color: #d4af37; }
+
+.profile-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 3rem; text-align: center; }
+.profile-avatar { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #d4af37, #bfa132); margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: #000; }
+.profile-card h1 { font-size: 2rem; font-weight: 300; margin-bottom: 0.3rem; }
+.profile-email { color: #888; margin-bottom: 2.5rem; font-size: 1rem; }
+
+.profile-details, .profile-form { text-align: left; }
+.detail-row { display: flex; justify-content: space-between; padding: 1.2rem 0; border-bottom: 1px solid #222; }
+.detail-label { color: #888; }
+.detail-value { color: #fff; font-weight: 500; }
+
+.profile-form input { width: 100%; padding: 1rem; margin-bottom: 1rem; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; outline: none; font-size: 1rem; }
+.profile-form input:focus { border-color: #d4af37; }
+
+.profile-actions { display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap; }
+.edit-btn, .orders-btn, .logout-btn { padding: 0.9rem 2rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.3s; }
+.edit-btn { background: #d4af37; color: #000; }
+.edit-btn:hover { background: #fff; }
+.orders-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; }
+.orders-btn:hover { background: #d4af37; color: #000; }
+.logout-btn { background: transparent; border: 1px solid #555; color: #888; }
+.logout-btn:hover { border-color: #ff4444; color: #ff4444; }
