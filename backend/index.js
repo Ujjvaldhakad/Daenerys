@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const userRouter = require("./routes/user.route");
 
 dotenv.config(); // .env file read karega
 
@@ -12,6 +13,8 @@ app.use(express.json());
 app.use(cors());
 connectDB();
 
+// routes
+app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
     res.send("Server is running 🚀");
